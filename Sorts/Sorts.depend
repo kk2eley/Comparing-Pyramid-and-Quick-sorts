@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1707852991 source:/home/yaro2k/C_projects/Comparing-Pyramid-and-Quick-sorts/Sorts/main.c
+1707854764 source:/home/yaro2k/C_projects/Comparing-Pyramid-and-Quick-sorts/Sorts/main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>

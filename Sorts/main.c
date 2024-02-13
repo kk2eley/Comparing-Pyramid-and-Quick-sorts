@@ -31,7 +31,9 @@ void *postordered(int n, long long int *a) {
 
 // Функция генерации массива случайных чисел
 void *randomed(int n, long long int *a) {
-    srand(time(NULL));  // Инициализируем генератор случайных чисел текущим временем
+    static shift = 0; // Инициализируем сдвиг
+    srand(time(NULL) + shift);  // Инициализируем генератор случайных чисел текущим временем
+    shift += 1000; // Обновляем сдвиг
     for (int i = 0; i < n; i++)
         a[i] = ((long long int)rand() << 32) | rand(); // Генерируем случайное число
 }
@@ -145,7 +147,7 @@ int isNotIncreasing(int n, long long int *a) {
 */
 
 int main(void) {
-    int n = 100; // Задаём размер генерируемых массивов
+    int n = 10000; // Задаём размер генерируемых массивов
 
     long long int *arr1 = malloc(n * sizeof(long long int)); // Выделяем память под массив
     inordered(n, arr1); // Генерируем массив
