@@ -75,10 +75,34 @@ void qsortCustom(int n, long long int *a) {
     }
 }
 
-/*
-void psort(int n, long long int *a) {
+//функция просеивания дерева с корнем i
+void heapify(int n, long long int *a, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
 
-}*/
+    if (left < n && a[largest] < a[left])
+        largest = left;
+    if (right < n && a[largest] < a[right])
+        largest = right;
+
+    if (largest != i) {
+        swap(&a[i], &a[largest]);
+
+        heapify(n, a, largest);
+    }
+}
+
+void heapSort(int n, long long int *a) {
+    for (int i = 0; i < n; i++)
+        heapify(n, a, i);
+
+    for (int i = n - 1; i > 0; i--) {
+        swap(&a[0], &a[i]);
+
+        heapify(i, a, 0);
+    }
+}
 
 void arrprint(int n, long long int *a) {
     for (int i = 0; i < n; i++) {
@@ -88,7 +112,7 @@ void arrprint(int n, long long int *a) {
 }
 
 int main(void) {
-    int n = 2;
+    int n = 5;
 /*
     long long int *arr1 = malloc(n * sizeof(long long int));
     inordered(n, arr1);
@@ -105,7 +129,7 @@ int main(void) {
     for (int i = 0; i < n; i++)
         arr4[i] %= 100;
     arrprint(n, arr4);
-    qsortCustom(n, arr4);
+    heapSort(n, arr4);
     arrprint(n, arr4);
 
     return 0;
