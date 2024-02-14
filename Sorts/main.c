@@ -52,7 +52,12 @@ void swap(long long int* a, long long int* b) {
 // Функция сравнения
 long long int compare(long long int a, long long int b) {
     cmp++; // Увеличиваем счётчик сравнений
-    return ((a < 0) ? -a : a) - ((b < 0) ? -b : b); // Сравнение по модулю
+    if (((a < 0) ? -a : a) < ((b < 0) ? -b : b))
+        return -1; // Сравнение по модулю
+    else if (((a < 0) ? -a : a) > ((b < 0) ? -b : b))
+        return 1;
+    else
+        return 0;
 }
 
 // Функция разделения массива на две половины относительно выбранного значения
@@ -100,11 +105,16 @@ void heapify(int n, long long int *a, int i) {
         heapify(n, a, largest); // Запускаем рекурсию для большего сына
     }
 }
-
+//3 1 2 4
+//    3
+//   / \
+//  1   2
+// /
+//4
 // Функция пирамидальной сортировки
 void heapSort(int n, long long int *a) {
     // Строим кучу
-    for (int i = 0; i < n; i++)
+    for (int i = n - 1; i >= 0; i--)
         heapify(n, a, i);
 
 
@@ -123,14 +133,14 @@ long long int *arrCopy(int n, long long int *a) {
 }
 
 // Отладочные функции
-/*
+
 void arrPrint(int n, long long int *a) {
     for (int i = 0; i < n; i++) {
-        printf("%20lld ", a[i]);
-        if ((i + 1) % 5 == 0) printf("\n");
+        printf("%5lld ", a[i]);
+        if ((i + 1) % n == 0) printf("\n");
     }
 }
-
+/*
 int isNotDecreasing(int n, long long int *a) {
     for (int i = 1; i < n; i++)
         if (a[i] < a[i - 1])
@@ -147,7 +157,7 @@ int isNotIncreasing(int n, long long int *a) {
 */
 
 int main(void) {
-    int n = 10000; // Задаём размер генерируемых массивов
+    int n = 20; // Задаём размер генерируемых массивов
 
     long long int *arr1 = malloc(n * sizeof(long long int)); // Выделяем память под массив
     inordered(n, arr1); // Генерируем массив
