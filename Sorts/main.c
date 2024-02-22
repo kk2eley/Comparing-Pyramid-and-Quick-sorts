@@ -3,34 +3,19 @@
 #include <time.h>
 #include <limits.h>
 
-
-// Функция генерации случайных числе в не убывающем порядке
-void *inordered(int n, long long int *a) {
-    long long int lim = LLONG_MAX / n * 2; // Задаём передел шага для генерации шага
-    long long int step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim; // Генерируем первый шаг
-    a[0] = LLONG_MIN + step; // Записываем первое число
-    for (int i = 1; i < n; i++) {
-        step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim; // Генерируем очередной шаг
-        a[i] = a[i - 1] + step; // Записываем очередное число
-    }
-}
-
-// Функция генерации случайных чисел в не возрастающем порядке
-void *postordered(int n, long long int *a) {
-    // Действия аналогичные предыдущей функции но записывать значения начинаем с конца массива
-    long long int lim = LLONG_MAX / n * 2;
-    long long int step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim;
-    a[n - 1] = LLONG_MIN + step;
-    for (int i = n - 2; i >= 0; i--) {
-        step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim;
-        a[i] = a[i - 1] + step;
-    }
+void arrCompress(int n, long long int *a) {
+    for (int i = 0; i < n; i++)
+        a[i] %= 100;
 }
 
 // Функция генерации массива случайных чисел
-void *randomed(int n, long long int *a) {
-    for (int i = 0; i < n; i++)
-        a[i] = ((long long int)rand() << 32) | rand(); // Генерируем случайное число
+void randomed(int n, long long int *a) {
+    for (int i = 0; i < n; i++) {
+        a[i] = ((long long int)rand() << 48) | ((long long int)rand() << 32) | ((long long int)rand() << 16) | rand(); // Генерируем случайное число
+        if (a[i] == LLONG_MIN)
+            a[i] += 1;
+    }
+
 }
 
 int swp = 0; // Переменная количества обменов
@@ -81,6 +66,32 @@ void qsortCustom(int n, long long int *a) {
     } else if (n == 2 && compare(a[0], a[1]) > 0) { // Базовый случай
         swap(&a[0], &a[1]);
     }
+}
+
+// Функция генерации случайных числе в не убывающем порядке
+void inordered(int n, long long int *a) {
+    randomed(n, a); // Создаём массив случайных чисел
+    qsortCustom(n, a); // Упорядочиваем его
+    cmp = 0;
+    swp = 0;
+}
+
+// Функция разворота массива
+void arrReverse(int n, long long int *a) {
+    for (int i = 0; i < n / 2; i++) {
+        int temp = a[i];
+        a[i] = a[n - i - 1];
+        a[n - i - 1] = temp;
+    }
+}
+
+// Функция генерации случайных чисел в не возрастающем порядке
+void *postordered(int n, long long int *a) {
+    randomed(n, a); // Создаём массив случайных чисел
+    qsortCustom(n, a); // Упорядочиваем его
+    arrReverse(n, a); // Разворачиваем массив
+    cmp = 0;
+    swp = 0;
 }
 
 //функция просеивания дерева с корнем i
@@ -135,24 +146,27 @@ void arrPrint(int n, long long int *a) {
         if ((i + 1) % n == 0) printf("\n");
     }
 }
-/*
+
 int isNotDecreasing(int n, long long int *a) {
     for (int i = 1; i < n; i++)
-        if (a[i] < a[i - 1])
+        if (compare(a[i], a[i - 1]) < 0)
             return 0;
+    cmp = 0;
     return 1;
 }
 
 int isNotIncreasing(int n, long long int *a) {
     for (int i = 1; i < n; i++)
-        if (a[i] > a[i - 1])
+        if (compare(a[i], a[i - 1]) > 0)
             return 0;
+    cmp = 0;
     return 1;
 }
-*/
+
 
 int main(void) {
-    srand(2534910058);
+    srand(time(NULL));
+    //srand(2534910058);
     int n = 10; // Задаём размер генерируемых массивов
 
     long long int *arr1 = malloc(n * sizeof(long long int)); // Выделяем память под массив
