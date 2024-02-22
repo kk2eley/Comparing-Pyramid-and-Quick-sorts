@@ -6,7 +6,6 @@
 
 // Функция генерации случайных числе в не убывающем порядке
 void *inordered(int n, long long int *a) {
-    srand(time(NULL)); // Инициализируем генератор случайных чисел текущим временем
     long long int lim = LLONG_MAX / n * 2; // Задаём передел шага для генерации шага
     long long int step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim; // Генерируем первый шаг
     a[0] = LLONG_MIN + step; // Записываем первое число
@@ -19,7 +18,6 @@ void *inordered(int n, long long int *a) {
 // Функция генерации случайных чисел в не возрастающем порядке
 void *postordered(int n, long long int *a) {
     // Действия аналогичные предыдущей функции но записывать значения начинаем с конца массива
-    srand(time(NULL));
     long long int lim = LLONG_MAX / n * 2;
     long long int step = ((((long long)rand() << 32) | rand()) & (~0 >> 1)) % lim;
     a[n - 1] = LLONG_MIN + step;
@@ -31,9 +29,6 @@ void *postordered(int n, long long int *a) {
 
 // Функция генерации массива случайных чисел
 void *randomed(int n, long long int *a) {
-    static shift = 0; // Инициализируем сдвиг
-    srand(time(NULL) + shift);  // Инициализируем генератор случайных чисел текущим временем
-    shift += 1000; // Обновляем сдвиг
     for (int i = 0; i < n; i++)
         a[i] = ((long long int)rand() << 32) | rand(); // Генерируем случайное число
 }
@@ -83,7 +78,7 @@ void qsortCustom(int n, long long int *a) {
         int rif = partition(n, a); // Устанавливаем счетчик для разделения массива
         qsortCustom(rif , a); // Запускаем рекурсию для частей массива
         qsortCustom(n - rif, a + rif);
-    } else if (n == 2 && a[0] > a[1]) { // Базовый случай
+    } else if (n == 2 && compare(a[0], a[1]) > 0) { // Базовый случай
         swap(&a[0], &a[1]);
     }
 }
@@ -157,7 +152,8 @@ int isNotIncreasing(int n, long long int *a) {
 */
 
 int main(void) {
-    int n = 20; // Задаём размер генерируемых массивов
+    srand(2534910058);
+    int n = 10; // Задаём размер генерируемых массивов
 
     long long int *arr1 = malloc(n * sizeof(long long int)); // Выделяем память под массив
     inordered(n, arr1); // Генерируем массив
